@@ -12,8 +12,7 @@ Add your custom command definitions to `config.json`:
     "port": 8098,
     "commands": {
         "shutdown": "systemctl poweroff -i",
-        "ping": "ping -c 3 google.de",
-        "ls": "ls /"
+        "ping": "ping -c 3 google.de"
     }
 }
 ```
