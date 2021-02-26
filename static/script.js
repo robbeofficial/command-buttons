@@ -3,7 +3,6 @@ async function stream(url, target) {
     const reader = response.body
         .pipeThrough(new TextDecoderStream())
         .getReader();
-    const out = document.getElementById('out');
 
     while (true) {
         const { value, done } = await reader.read();
