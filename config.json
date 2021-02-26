@@ -3,6 +3,8 @@
     "port": 8098,
     "commands": {
         "shutdown": "systemctl poweroff -i",
-        "ls": "ls /"
+        "ping": "ping -c 3 google.de",
+        "ls": "ls /",
+        "error": "ls error"
     }
 }

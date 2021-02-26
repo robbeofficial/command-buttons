@@ -1,19 +1,21 @@
-from flask import Flask, render_template
+from flask import Flask, Response, render_template
 import json
-import subprocess
+from subprocess import Popen, PIPE, STDOUT
 
 app = Flask(__name__)
 config = json.load(open('config.json', 'r'))
 
 @app.route('/run/<command>')
-def command(command):
-    p = subprocess.run(config['commands'][command], shell=True, capture_output=True)
-    return render_template('result.j2', stdout=p.stdout.decode(), stderr=p.stderr.decode())    
+def run(command):
+    def generate():
+        with Popen(config['commands'][command], shell=True, stdout=PIPE, stderr=STDOUT) as p:
+          while (line := p.stdout.readline()):
+            yield line
+    return Response(generate(), mimetype='text/html')
 
 @app.route('/')
 def index():
-  return render_template('commands.j2', commands = config['commands'])
+  return render_template('commands.j2', commands = map(lambda k: dict(name=k, cmd=config['commands'][k]) , config['commands']))
 
 if __name__ == '__main__':
-  app.run(host = '0.0.0.0', port = config['port'])
-  
+  app.run(host = '0.0.0.0', port = config['port'], debug=True)
