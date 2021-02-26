@@ -1,0 +1,15 @@
+{% extends 'base.j2' %} 
+
+{% block content %} 
+
+{% if stdout %} 
+<h1>stdout</h1>
+<pre>{{ stdout }}</pre>
+{% endif %} 
+
+{% if stderr %} 
+<h1>stderr</h1>
+<pre>{{ stderr }}</pre>
+{% endif %} 
+
+{% endblock %}

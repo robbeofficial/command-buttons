@@ -1,0 +1,7 @@
+{% extends 'base.j2' %} 
+
+{% block content %} 
+{% for command in commands %}
+<a href="#" class="btn" onclick="fetch('/run/{{ command }}')">{{ command }}</a>
+{% endfor %} 
+{% endblock %}

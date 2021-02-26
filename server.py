@@ -1,19 +1,18 @@
-from flask import Flask
+from flask import Flask, render_template
 import json
 import subprocess
 
 app = Flask(__name__)
 config = json.load(open('config.json', 'r'))
 
-@app.route('/<command>')
+@app.route('/run/<command>')
 def command(command):
-    p = subprocess.run(config['commands'][command], shell=True, capture_output=True)    
-    return f'<h1>stdout</h1><pre>{p.stdout.decode()}</pre>' + f'<h1>stderr</h1><pre>{p.stderr.decode()}</pre>'
+    p = subprocess.run(config['commands'][command], shell=True, capture_output=True)
+    return render_template('result.j2', stdout=p.stdout.decode(), stderr=p.stderr.decode())    
 
 @app.route('/')
 def index():
-  tags = map(lambda k: f"<button onclick=fetch('/{k}')>{k}</button>", config['commands'].keys())
-  return "<br/>".join(tags)
+  return render_template('commands.j2', commands = config['commands'])
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', port = config['port'])

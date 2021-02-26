@@ -1,0 +1,28 @@
+.btn {
+    padding: 1em;
+    margin: 1em;
+    color: black;
+    background-color: lightgray;
+    display: block;
+    transition: .1s;
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: .3em .3em .3em darkgray;
+    border-radius: 1em;
+}
+
+.btn::first-letter {
+    text-transform: uppercase;
+}
+
+.btn:hover,
+.btn:focus {
+    background-color: gray;
+}
+
+.btn:active {
+    transform: translate(.3em, .3em);
+    box-shadow: none;
+}
