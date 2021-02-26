@@ -18,4 +18,4 @@ def index():
   return render_template('commands.j2', commands = map(lambda k: dict(name=k, cmd=config['commands'][k]) , config['commands']))
 
 if __name__ == '__main__':
-  app.run(host = '0.0.0.0', port = config['port'])
+  app.run(host = config['host'], port = config['port'])
