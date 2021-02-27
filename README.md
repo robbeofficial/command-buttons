@@ -11,9 +11,11 @@ Add your custom command definitions to `config.json`:
     "host": "0.0.0.0",
     "port": 8098,
     "secret_key": null,
+    "abort_signal": "SIGINT",
     "commands": {
         "shutdown": "systemctl poweroff -i",
-        "ping": "ping -c 3 google.de"
+        "ping": "ping google.de",
+        "stop": "true"
     }
 }
 ```
@@ -21,6 +23,7 @@ If you want to enable authorization, set `secret_key` to a random secret value e
 ```bash
 $ python3 -c 'import secrets; print(secrets.token_urlsafe())'
 ```
+Only one running command process is allowed at a time. When the user invokes a new command, any other command that might be still running will be aborted by sending `abort_signal` to the corresponding process. Please refer to the [Python Documentation](https://docs.python.org/3/library/signal.html#module-contents) for details.
 
 ## Usage
 1. `$ ./run.sh`
@@ -29,12 +32,12 @@ $ python3 -c 'import secrets; print(secrets.token_urlsafe())'
 4. Remotely run your commands by tapping a button while observing stdout/stderr in realtime
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/609855/109354034-78ed6100-787d-11eb-9106-87c7bf6d692d.png" alt="screenshot" height="640">
+    <img src="https://user-images.githubusercontent.com/609855/109392866-cf5eac00-791e-11eb-8512-4f606095d5dd.png" alt="screenshot" height="640">
 </p>
 
 ## Notes
 - The intended use case is **not** public deployment, but rather convenience in closed home network environments
-- It won't work with older browsers without explicitly setting same-origin credentials (due to the use of [fetch()](https://github.com/whatwg/fetch/pull/585))
+- Authorization won't work with older browsers without explicitly setting same-origin credentials (due to the use of [fetch()](https://github.com/whatwg/fetch/pull/585))
 
 
 

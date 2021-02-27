@@ -2,12 +2,14 @@ from flask import Flask, Response, render_template, request, session
 import json
 from subprocess import Popen, PIPE, STDOUT
 from datetime import timedelta
+import signal
 
 app = Flask(__name__)
 config = json.load(open('config.json', 'r'))
 app.secret_key = config['secret_key']
 app.permanent_session_lifetime = timedelta(days=365)
 denyset = set()
+procs = {}
 
 def authorized():
   if not app.secret_key:
@@ -27,13 +29,17 @@ def authorized():
       return False
 
 @app.route('/run/<command>')
-def run(command):
+def run(command):  
   if not authorized():
     return "Unauthorized"
+  for p in procs.values():
+    p.send_signal(getattr(signal, config['abort_signal']))
   def generate():
-      with Popen(config['commands'][command], shell=True, stdout=PIPE, stderr=STDOUT) as p:
-        while (line := p.stdout.readline()):
-          yield line
+    with Popen(f'exec {config["commands"][command]}', shell=True, stdout=PIPE, stderr=STDOUT) as p:
+      procs[p.pid] = p
+      while (line := p.stdout.readline()):
+        yield line
+      del procs[p.pid]
   return Response(generate(), mimetype='text/html')
 
 @app.route('/')
