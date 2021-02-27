@@ -1,6 +1,7 @@
 {
     "host": "0.0.0.0",
     "port": 8098,
+    "secret_key": null,
     "commands": {
         "shutdown": "systemctl poweroff -i",
         "ping": "ping -c 3 google.de"
